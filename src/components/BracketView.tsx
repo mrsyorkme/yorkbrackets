@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { Match, Participant } from "@/lib/tournament";
-import { Trophy, Camera } from "lucide-react";
+import { Trophy, Camera, Info } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 interface BracketViewProps {
   matches: Match[];
