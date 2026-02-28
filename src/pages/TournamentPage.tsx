@@ -17,6 +17,7 @@ const TournamentPage = () => {
   const [matches, setMatches] = useState<Match[]>([]);
   const [selectedMatch, setSelectedMatch] = useState<Match | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showCover, setShowCover] = useState(false);
   const bracketRef = useRef<HTMLDivElement>(null);
 
   const load = useCallback(async () => {
