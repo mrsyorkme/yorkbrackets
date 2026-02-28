@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback, useRef } from "react";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useParams, Link } from "react-router-dom";
 import { fetchTournament, Match, Participant, Tournament } from "@/lib/tournament";
 import BracketView from "@/components/BracketView";
