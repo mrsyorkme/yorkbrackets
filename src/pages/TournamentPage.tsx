@@ -5,7 +5,7 @@ import BracketView from "@/components/BracketView";
 import MatchResultDialog from "@/components/MatchResultDialog";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Trophy, Shield } from "lucide-react";
+import { ArrowLeft, Trophy, Shield, Printer } from "lucide-react";
 
 const TournamentPage = () => {
   const { id } = useParams<{ id: string }>();
