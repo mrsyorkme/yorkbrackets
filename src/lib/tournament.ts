@@ -43,7 +43,7 @@ function nextPowerOfTwo(n: number) {
   return p;
 }
 
-export async function createTournament(name: string, names: string[]) {
+export async function createTournament(name: string, fighters: { name: string; description?: string }[]) {
   const { data: tournament, error: tErr } = await supabase
     .from("tournaments")
     .insert({ name })
