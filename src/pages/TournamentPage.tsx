@@ -82,15 +82,6 @@ const TournamentPage = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Cover image for print */}
-      {tournament.cover_image_url && (
-        <img
-          src={tournament.cover_image_url}
-          alt="Tournament cover"
-          className="hidden print-cover-image"
-        />
-      )}
-
       {/* Header */}
       <header className="border-b border-border bg-card">
         <div className="container mx-auto flex items-center justify-between px-4 py-4">
@@ -100,11 +91,26 @@ const TournamentPage = () => {
                 <ArrowLeft className="h-4 w-4 mr-1" /> Back
               </Button>
             </Link>
-            <div>
-              <h1 className="font-display text-3xl tracking-wider">{tournament.name}</h1>
-              <p className="text-sm text-muted-foreground print:hidden">
-                {participants.length} participants · {matches.filter(m => m.winner_id).length}/{matches.length} matches played
-              </p>
+            <div className="flex items-center gap-4">
+              {/* Cover image thumbnail */}
+              {tournament.cover_image_url && (
+                <button
+                  onClick={() => setShowCover(true)}
+                  className="flex-shrink-0 rounded-lg overflow-hidden border border-border hover:border-primary transition-colors cursor-pointer print:hidden"
+                >
+                  <img
+                    src={tournament.cover_image_url}
+                    alt="Tournament cover"
+                    className="h-12 w-20 object-cover"
+                  />
+                </button>
+              )}
+              <div>
+                <h1 className="font-display text-3xl tracking-wider">{tournament.name}</h1>
+                <p className="text-sm text-muted-foreground print:hidden">
+                  {participants.length} participants · {matches.filter(m => m.winner_id).length}/{matches.length} matches played
+                </p>
+              </div>
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -121,16 +127,16 @@ const TournamentPage = () => {
         </div>
       </header>
 
-      {/* Cover image display & upload (screen) */}
-      {tournament.cover_image_url && (
-        <div className="w-full print:hidden">
+      {/* Cover image lightbox */}
+      <Dialog open={showCover} onOpenChange={setShowCover}>
+        <DialogContent className="max-w-4xl p-2">
           <img
-            src={tournament.cover_image_url}
+            src={tournament.cover_image_url ?? ""}
             alt="Tournament cover"
-            className="w-full h-auto"
+            className="w-full h-auto rounded"
           />
-        </div>
-      )}
+        </DialogContent>
+      </Dialog>
 
       {/* Admin cover image upload */}
       {isAdmin && (
