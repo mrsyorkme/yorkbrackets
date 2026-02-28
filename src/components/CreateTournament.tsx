@@ -18,14 +18,19 @@ const CreateTournament = () => {
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
-    const names = namesText.split("\n").map(n => n.trim()).filter(Boolean);
-    if (names.length < 2) {
+    const lines = namesText.split("\n").map(n => n.trim()).filter(Boolean);
+    if (lines.length < 2) {
       toast({ title: "Need at least 2 participants", variant: "destructive" });
       return;
     }
+    // Parse "Name | Description" format
+    const fighters = lines.map(line => {
+      const [namePart, ...descParts] = line.split("|");
+      return { name: namePart.trim(), description: descParts.join("|").trim() || undefined };
+    });
     setCreating(true);
     try {
-      const t = await createTournament(name, names);
+      const t = await createTournament(name, fighters);
       toast({ title: "Tournament created!" });
       navigate(`/tournament/${t.id}`);
     } catch (err: any) {
