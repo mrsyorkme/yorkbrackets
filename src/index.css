@@ -1,4 +1,38 @@
 @tailwind base;
+
+@media print {
+  @page {
+    size: landscape;
+    margin: 0.5in;
+  }
+
+  body {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    background: white !important;
+  }
+
+  /* Hide non-essential UI */
+  header {
+    border: none !important;
+    background: transparent !important;
+  }
+
+  /* Make bracket fill the page */
+  main {
+    padding: 0 !important;
+  }
+
+  /* Ensure bracket doesn't clip */
+  .overflow-x-auto {
+    overflow: visible !important;
+  }
+
+  /* Clean card styling for print */
+  .rounded-lg {
+    break-inside: avoid;
+  }
+}
 @tailwind components;
 @tailwind utilities;
 
