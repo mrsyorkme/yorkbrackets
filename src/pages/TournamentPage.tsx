@@ -121,11 +121,11 @@ const TournamentPage = () => {
 
       {/* Cover image display & upload (screen) */}
       {tournament.cover_image_url && (
-        <div className="w-full h-48 overflow-hidden print:hidden">
+        <div className="w-full print:hidden">
           <img
             src={tournament.cover_image_url}
             alt="Tournament cover"
-            className="w-full h-full object-cover"
+            className="w-full h-auto"
           />
         </div>
       )}
