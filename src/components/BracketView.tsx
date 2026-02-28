@@ -15,9 +15,48 @@ const BracketView = ({ matches, participants, isAdmin, onSelectMatch }: BracketV
   const rounds = [...new Set(matches.map(m => m.round))].sort((a, b) => a - b);
   const totalRounds = rounds.length;
 
-  const getName = (id: string | null) => {
+  const getParticipant = (id: string | null) => {
     if (!id) return null;
-    return participantMap.get(id)?.name ?? "TBD";
+    return participantMap.get(id) ?? null;
+  };
+
+  const ParticipantName = ({ participantId, isWinner, isLoser }: { participantId: string | null; isWinner: boolean; isLoser: boolean }) => {
+    const participant = getParticipant(participantId);
+    if (!participant) return <span className="truncate">—</span>;
+
+    const nameEl = <span className="truncate">{participant.name}</span>;
+
+    if (!participant.description) {
+      return (
+        <>
+          {isWinner && <Trophy className="h-3.5 w-3.5 text-winner flex-shrink-0" />}
+          {nameEl}
+        </>
+      );
+    }
+
+    return (
+      <>
+        {isWinner && <Trophy className="h-3.5 w-3.5 text-winner flex-shrink-0" />}
+        <Popover>
+          <PopoverTrigger asChild>
+            <button
+              className="flex items-center gap-1.5 truncate print:pointer-events-none"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {nameEl}
+              <Info className="h-3 w-3 text-muted-foreground flex-shrink-0 print:hidden" />
+            </button>
+          </PopoverTrigger>
+          <PopoverContent className="w-64 print:hidden" side="right">
+            <div className="space-y-1.5">
+              <p className="font-medium text-sm">{participant.name}</p>
+              <p className="text-xs text-muted-foreground">{participant.description}</p>
+            </div>
+          </PopoverContent>
+        </Popover>
+      </>
+    );
   };
 
   return (
