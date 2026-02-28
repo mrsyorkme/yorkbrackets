@@ -51,12 +51,13 @@ export async function createTournament(name: string, fighters: { name: string; d
     .single();
   if (tErr || !tournament) throw tErr;
 
-  const shuffled = shuffle(names);
+  const shuffled = shuffle(fighters);
   const bracketSize = nextPowerOfTwo(shuffled.length);
 
-  const participants = shuffled.map((n, i) => ({
+  const participants = shuffled.map((f, i) => ({
     tournament_id: tournament.id,
-    name: n,
+    name: f.name,
+    description: f.description || null,
     seed: i + 1,
   }));
 

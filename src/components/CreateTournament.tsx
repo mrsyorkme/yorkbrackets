@@ -58,14 +58,14 @@ const CreateTournament = () => {
             <Label htmlFor="names">Participants (one per line)</Label>
             <Textarea
               id="names"
-              placeholder={"Alice\nBob\nCharlie\nDiana"}
+              placeholder={"Alice | The undefeated champion\nBob | Rising star from the east\nCharlie\nDiana | Defensive specialist"}
               rows={8}
               value={namesText}
               onChange={e => setNamesText(e.target.value)}
               required
             />
             <p className="text-xs text-muted-foreground">
-              Names will be randomized into bracket positions automatically.
+              Use "Name | Description" format. Description is optional. Names are randomized automatically.
             </p>
           </div>
           <Button type="submit" className="w-full" disabled={creating}>
