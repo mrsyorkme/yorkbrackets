@@ -1,8 +1,9 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import { fetchTournament, Match, Participant, Tournament } from "@/lib/tournament";
 import BracketView from "@/components/BracketView";
 import MatchResultDialog from "@/components/MatchResultDialog";
+import CoverImageUpload from "@/components/CoverImageUpload";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Trophy, Shield, Printer } from "lucide-react";
@@ -15,6 +16,7 @@ const TournamentPage = () => {
   const [matches, setMatches] = useState<Match[]>([]);
   const [selectedMatch, setSelectedMatch] = useState<Match | null>(null);
   const [loading, setLoading] = useState(true);
+  const bracketRef = useRef<HTMLDivElement>(null);
 
   const load = useCallback(async () => {
     if (!id) return;
@@ -49,8 +51,44 @@ const TournamentPage = () => {
   const finalMatch = matches.find(m => m.round === totalRounds);
   const champion = finalMatch?.winner_id ? participants.find(p => p.id === finalMatch.winner_id) : null;
 
+  const handlePrint = () => {
+    // Scale bracket to fit page width before printing
+    if (bracketRef.current) {
+      const container = bracketRef.current;
+      const inner = container.firstElementChild as HTMLElement;
+      if (inner) {
+        const pageWidth = window.innerWidth; // approximate printable width
+        const contentWidth = inner.scrollWidth;
+        if (contentWidth > pageWidth) {
+          const scale = pageWidth / contentWidth;
+          inner.style.transform = `scale(${scale})`;
+          inner.style.transformOrigin = 'top left';
+          container.style.height = `${inner.scrollHeight * scale}px`;
+        }
+      }
+    }
+    window.print();
+    // Reset after print
+    if (bracketRef.current) {
+      const inner = bracketRef.current.firstElementChild as HTMLElement;
+      if (inner) {
+        inner.style.transform = '';
+        bracketRef.current.style.height = '';
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
+      {/* Cover image for print */}
+      {tournament.cover_image_url && (
+        <img
+          src={tournament.cover_image_url}
+          alt="Tournament cover"
+          className="hidden print-cover-image"
+        />
+      )}
+
       {/* Header */}
       <header className="border-b border-border bg-card">
         <div className="container mx-auto flex items-center justify-between px-4 py-4">
@@ -68,7 +106,7 @@ const TournamentPage = () => {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <Button variant="outline" size="sm" className="print:hidden" onClick={() => window.print()}>
+            <Button variant="outline" size="sm" className="print:hidden" onClick={handlePrint}>
               <Printer className="h-4 w-4 mr-1" /> Print Bracket
             </Button>
             {isAdmin && (
@@ -80,6 +118,28 @@ const TournamentPage = () => {
           </div>
         </div>
       </header>
+
+      {/* Cover image display & upload (screen) */}
+      {tournament.cover_image_url && (
+        <div className="w-full h-48 overflow-hidden print:hidden">
+          <img
+            src={tournament.cover_image_url}
+            alt="Tournament cover"
+            className="w-full h-full object-cover"
+          />
+        </div>
+      )}
+
+      {/* Admin cover image upload */}
+      {isAdmin && (
+        <div className="container mx-auto px-4 pt-4 print:hidden">
+          <CoverImageUpload
+            tournamentId={tournament.id}
+            currentUrl={tournament.cover_image_url}
+            onUploaded={load}
+          />
+        </div>
+      )}
 
       {/* Champion banner */}
       {champion && (
@@ -96,12 +156,14 @@ const TournamentPage = () => {
 
       {/* Bracket */}
       <main className="container mx-auto py-8 px-4">
-        <BracketView
-          matches={matches}
-          participants={participants}
-          isAdmin={isAdmin}
-          onSelectMatch={setSelectedMatch}
-        />
+        <div ref={bracketRef} className="bracket-print-container overflow-x-auto">
+          <BracketView
+            matches={matches}
+            participants={participants}
+            isAdmin={isAdmin}
+            onSelectMatch={setSelectedMatch}
+          />
+        </div>
       </main>
 
       {/* Match result dialog */}

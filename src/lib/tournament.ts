@@ -5,6 +5,7 @@ export interface Tournament {
   name: string;
   created_at: string;
   status: string;
+  cover_image_url: string | null;
 }
 
 export interface Participant {
