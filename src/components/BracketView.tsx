@@ -76,12 +76,12 @@ const BracketView = ({ matches, participants, isAdmin, onSelectMatch }: BracketV
               style={{ paddingTop: roundIndex > 0 ? `${Math.pow(2, roundIndex - 1) * 24}px` : 0 }}
             >
               {roundMatches.map(match => {
-                const p1Name = getName(match.participant1_id);
-                const p2Name = getName(match.participant2_id);
+                const hasP1 = !!match.participant1_id;
+                const hasP2 = !!match.participant2_id;
                 const hasWinner = !!match.winner_id;
                 const isP1Winner = match.winner_id === match.participant1_id;
                 const isP2Winner = match.winner_id === match.participant2_id;
-                const canEdit = isAdmin && p1Name && p2Name && !hasWinner;
+                const canEdit = isAdmin && hasP1 && hasP2 && !hasWinner;
 
                 return (
                   <div
