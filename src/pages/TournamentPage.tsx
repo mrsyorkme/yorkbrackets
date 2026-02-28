@@ -5,7 +5,7 @@ import BracketView from "@/components/BracketView";
 import MatchResultDialog from "@/components/MatchResultDialog";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Trophy, Shield } from "lucide-react";
+import { ArrowLeft, Trophy, Shield, Printer } from "lucide-react";
 
 const TournamentPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -55,24 +55,29 @@ const TournamentPage = () => {
       <header className="border-b border-border bg-card">
         <div className="container mx-auto flex items-center justify-between px-4 py-4">
           <div className="flex items-center gap-4">
-            <Link to="/">
+            <Link to="/" className="print:hidden">
               <Button variant="ghost" size="sm">
                 <ArrowLeft className="h-4 w-4 mr-1" /> Back
               </Button>
             </Link>
             <div>
               <h1 className="font-display text-3xl tracking-wider">{tournament.name}</h1>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-muted-foreground print:hidden">
                 {participants.length} participants · {matches.filter(m => m.winner_id).length}/{matches.length} matches played
               </p>
             </div>
           </div>
-          {isAdmin && (
-            <div className="flex items-center gap-2 text-sm text-primary">
-              <Shield className="h-4 w-4" />
-              Admin Mode
-            </div>
-          )}
+          <div className="flex items-center gap-3">
+            <Button variant="outline" size="sm" className="print:hidden" onClick={() => window.print()}>
+              <Printer className="h-4 w-4 mr-1" /> Print Bracket
+            </Button>
+            {isAdmin && (
+              <div className="flex items-center gap-2 text-sm text-primary print:hidden">
+                <Shield className="h-4 w-4" />
+                Admin Mode
+              </div>
+            )}
+          </div>
         </div>
       </header>
 
