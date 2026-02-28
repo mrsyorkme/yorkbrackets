@@ -21,7 +21,7 @@ const BracketView = ({ matches, participants, isAdmin, onSelectMatch }: BracketV
   return (
     <div className="flex gap-4 overflow-x-auto pb-6 px-2">
       {rounds.map((round, roundIndex) => {
-        const roundMatches = matches.filter(m => m.round === round).sort((a, b) => a.match_number - b.match_number);
+        const roundMatches = matches.filter(m => m.round === round && (m.participant1_id || m.participant2_id)).sort((a, b) => a.match_number - b.match_number);
         const isFinal = round === totalRounds;
         const roundLabel = isFinal ? "FINAL" : round === totalRounds - 1 ? "SEMIS" : `ROUND ${round}`;
 
