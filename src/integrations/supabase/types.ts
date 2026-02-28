@@ -119,18 +119,21 @@ export type Database = {
       }
       tournaments: {
         Row: {
+          cover_image_url: string | null
           created_at: string
           id: string
           name: string
           status: string
         }
         Insert: {
+          cover_image_url?: string | null
           created_at?: string
           id?: string
           name: string
           status?: string
         }
         Update: {
+          cover_image_url?: string | null
           created_at?: string
           id?: string
           name?: string

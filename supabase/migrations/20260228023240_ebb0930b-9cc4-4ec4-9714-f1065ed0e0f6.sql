@@ -1,0 +1,1 @@
+ALTER TABLE public.tournaments ADD COLUMN cover_image_url text;
