@@ -113,8 +113,7 @@ const BracketView = ({ matches, participants, isAdmin, onSelectMatch }: BracketV
                           : "text-foreground"
                       }`}
                     >
-                      {isP1Winner && <Trophy className="h-3.5 w-3.5 text-winner flex-shrink-0" />}
-                      <span className="truncate">{p1Name ?? "—"}</span>
+                      <ParticipantName participantId={match.participant1_id} isWinner={isP1Winner} isLoser={hasWinner && !isP1Winner} />
                     </div>
 
                     <div className="h-px bg-border" />
