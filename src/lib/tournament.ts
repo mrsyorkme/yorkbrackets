@@ -13,6 +13,7 @@ export interface Participant {
   tournament_id: string;
   name: string;
   seed: number;
+  description: string | null;
 }
 
 export interface Match {
@@ -42,7 +43,7 @@ function nextPowerOfTwo(n: number) {
   return p;
 }
 
-export async function createTournament(name: string, names: string[]) {
+export async function createTournament(name: string, fighters: { name: string; description?: string }[]) {
   const { data: tournament, error: tErr } = await supabase
     .from("tournaments")
     .insert({ name })
@@ -50,12 +51,13 @@ export async function createTournament(name: string, names: string[]) {
     .single();
   if (tErr || !tournament) throw tErr;
 
-  const shuffled = shuffle(names);
+  const shuffled = shuffle(fighters);
   const bracketSize = nextPowerOfTwo(shuffled.length);
 
-  const participants = shuffled.map((n, i) => ({
+  const participants = shuffled.map((f, i) => ({
     tournament_id: tournament.id,
-    name: n,
+    name: f.name,
+    description: f.description || null,
     seed: i + 1,
   }));
 

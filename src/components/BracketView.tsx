@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { Match, Participant } from "@/lib/tournament";
-import { Trophy, Camera } from "lucide-react";
+import { Trophy, Camera, Info } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 interface BracketViewProps {
   matches: Match[];
@@ -13,9 +15,48 @@ const BracketView = ({ matches, participants, isAdmin, onSelectMatch }: BracketV
   const rounds = [...new Set(matches.map(m => m.round))].sort((a, b) => a - b);
   const totalRounds = rounds.length;
 
-  const getName = (id: string | null) => {
+  const getParticipant = (id: string | null) => {
     if (!id) return null;
-    return participantMap.get(id)?.name ?? "TBD";
+    return participantMap.get(id) ?? null;
+  };
+
+  const ParticipantName = ({ participantId, isWinner, isLoser }: { participantId: string | null; isWinner: boolean; isLoser: boolean }) => {
+    const participant = getParticipant(participantId);
+    if (!participant) return <span className="truncate">—</span>;
+
+    const nameEl = <span className="truncate">{participant.name}</span>;
+
+    if (!participant.description) {
+      return (
+        <>
+          {isWinner && <Trophy className="h-3.5 w-3.5 text-winner flex-shrink-0" />}
+          {nameEl}
+        </>
+      );
+    }
+
+    return (
+      <>
+        {isWinner && <Trophy className="h-3.5 w-3.5 text-winner flex-shrink-0" />}
+        <Popover>
+          <PopoverTrigger asChild>
+            <button
+              className="flex items-center gap-1.5 truncate print:pointer-events-none"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {nameEl}
+              <Info className="h-3 w-3 text-muted-foreground flex-shrink-0 print:hidden" />
+            </button>
+          </PopoverTrigger>
+          <PopoverContent className="w-64 print:hidden" side="right">
+            <div className="space-y-1.5">
+              <p className="font-medium text-sm">{participant.name}</p>
+              <p className="text-xs text-muted-foreground">{participant.description}</p>
+            </div>
+          </PopoverContent>
+        </Popover>
+      </>
+    );
   };
 
   return (
@@ -35,12 +76,12 @@ const BracketView = ({ matches, participants, isAdmin, onSelectMatch }: BracketV
               style={{ paddingTop: roundIndex > 0 ? `${Math.pow(2, roundIndex - 1) * 24}px` : 0 }}
             >
               {roundMatches.map(match => {
-                const p1Name = getName(match.participant1_id);
-                const p2Name = getName(match.participant2_id);
+                const hasP1 = !!match.participant1_id;
+                const hasP2 = !!match.participant2_id;
                 const hasWinner = !!match.winner_id;
                 const isP1Winner = match.winner_id === match.participant1_id;
                 const isP2Winner = match.winner_id === match.participant2_id;
-                const canEdit = isAdmin && p1Name && p2Name && !hasWinner;
+                const canEdit = isAdmin && hasP1 && hasP2 && !hasWinner;
 
                 return (
                   <div
@@ -72,8 +113,7 @@ const BracketView = ({ matches, participants, isAdmin, onSelectMatch }: BracketV
                           : "text-foreground"
                       }`}
                     >
-                      {isP1Winner && <Trophy className="h-3.5 w-3.5 text-winner flex-shrink-0" />}
-                      <span className="truncate">{p1Name ?? "—"}</span>
+                      <ParticipantName participantId={match.participant1_id} isWinner={isP1Winner} isLoser={hasWinner && !isP1Winner} />
                     </div>
 
                     <div className="h-px bg-border" />
@@ -88,8 +128,7 @@ const BracketView = ({ matches, participants, isAdmin, onSelectMatch }: BracketV
                           : "text-foreground"
                       }`}
                     >
-                      {isP2Winner && <Trophy className="h-3.5 w-3.5 text-winner flex-shrink-0" />}
-                      <span className="truncate">{p2Name ?? "—"}</span>
+                      <ParticipantName participantId={match.participant2_id} isWinner={isP2Winner} isLoser={hasWinner && !isP2Winner} />
                     </div>
 
                     {/* Result text */}
