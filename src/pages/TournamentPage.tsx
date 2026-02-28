@@ -1,8 +1,9 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import { fetchTournament, Match, Participant, Tournament } from "@/lib/tournament";
 import BracketView from "@/components/BracketView";
 import MatchResultDialog from "@/components/MatchResultDialog";
+import CoverImageUpload from "@/components/CoverImageUpload";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Trophy, Shield, Printer } from "lucide-react";
