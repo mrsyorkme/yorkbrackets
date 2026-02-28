@@ -13,6 +13,7 @@ export interface Participant {
   tournament_id: string;
   name: string;
   seed: number;
+  description: string | null;
 }
 
 export interface Match {
