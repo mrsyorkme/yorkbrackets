@@ -98,13 +98,13 @@ const BracketView = ({ matches, participants, isAdmin, onSelectMatch }: BracketV
                     {/* Match result image thumbnail */}
                     {match.result_image_url && (
                       <button
-                        className="w-full h-16 overflow-hidden block print:h-28"
+                        className="flex justify-center w-full overflow-hidden py-1 print:py-2"
                         onClick={(e) => { e.stopPropagation(); setLightboxUrl(match.result_image_url); }}
                       >
                         <img
                           src={match.result_image_url}
                           alt="Match result"
-                          className="w-full h-full object-cover"
+                          className="max-w-[100px] max-h-[100px] object-contain rounded"
                         />
                       </button>
                     )}
