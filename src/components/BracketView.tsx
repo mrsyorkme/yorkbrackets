@@ -94,15 +94,18 @@ const BracketView = ({ matches, participants, isAdmin, onSelectMatch }: BracketV
                     onClick={() => canEdit && onSelectMatch?.(match)}
                     style={{ marginBottom: roundIndex > 0 ? `${Math.pow(2, roundIndex) * 16}px` : 0 }}
                   >
-                    {/* Match result image */}
+                    {/* Match result image thumbnail */}
                     {match.result_image_url && (
-                      <div className="w-full h-28 overflow-hidden">
+                      <button
+                        className="w-full h-16 overflow-hidden block print:h-28"
+                        onClick={(e) => { e.stopPropagation(); setLightboxUrl(match.result_image_url); }}
+                      >
                         <img
                           src={match.result_image_url}
                           alt="Match result"
                           className="w-full h-full object-cover"
                         />
-                      </div>
+                      </button>
                     )}
 
                     {/* Participant 1 */}
