@@ -70,7 +70,7 @@ const BracketView = ({ matches, participants, isAdmin, onSelectMatch }: BracketV
         const roundLabel = isFinal ? "FINAL" : round === totalRounds - 1 ? "SEMIS" : `ROUND ${round}`;
 
         return (
-          <div key={round} className="flex flex-col flex-shrink-0" style={{ minWidth: 220 }}>
+          <div key={round} className="flex flex-col flex-shrink-0" style={{ width: 200, maxWidth: 200 }}>
             <h3 className="font-display text-lg tracking-wider text-muted-foreground mb-3 text-center">
               {roundLabel}
             </h3>
