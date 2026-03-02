@@ -11,6 +11,7 @@ interface BracketViewProps {
 }
 
 const BracketView = ({ matches, participants, isAdmin, onSelectMatch }: BracketViewProps) => {
+  const [lightboxUrl, setLightboxUrl] = useState<string | null>(null);
   const participantMap = new Map(participants.map(p => [p.id, p]));
   const rounds = [...new Set(matches.map(m => m.round))].sort((a, b) => a - b);
   const totalRounds = rounds.length;
