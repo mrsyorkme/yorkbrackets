@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Match, Participant } from "@/lib/tournament";
 import { Trophy, Camera, Info } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 interface BracketViewProps {
   matches: Match[];
@@ -11,6 +12,7 @@ interface BracketViewProps {
 }
 
 const BracketView = ({ matches, participants, isAdmin, onSelectMatch }: BracketViewProps) => {
+  const [lightboxUrl, setLightboxUrl] = useState<string | null>(null);
   const participantMap = new Map(participants.map(p => [p.id, p]));
   const rounds = [...new Set(matches.map(m => m.round))].sort((a, b) => a - b);
   const totalRounds = rounds.length;
@@ -60,6 +62,7 @@ const BracketView = ({ matches, participants, isAdmin, onSelectMatch }: BracketV
   };
 
   return (
+    <>
     <div className="flex gap-4 overflow-x-auto pb-6 px-2">
       {rounds.map((round, roundIndex) => {
         const roundMatches = matches.filter(m => m.round === round && (m.participant1_id || m.participant2_id)).sort((a, b) => a.match_number - b.match_number);
@@ -92,15 +95,18 @@ const BracketView = ({ matches, participants, isAdmin, onSelectMatch }: BracketV
                     onClick={() => canEdit && onSelectMatch?.(match)}
                     style={{ marginBottom: roundIndex > 0 ? `${Math.pow(2, roundIndex) * 16}px` : 0 }}
                   >
-                    {/* Match result image */}
+                    {/* Match result image thumbnail */}
                     {match.result_image_url && (
-                      <div className="w-full h-28 overflow-hidden">
+                      <button
+                        className="w-full h-16 overflow-hidden block print:h-28"
+                        onClick={(e) => { e.stopPropagation(); setLightboxUrl(match.result_image_url); }}
+                      >
                         <img
                           src={match.result_image_url}
                           alt="Match result"
                           className="w-full h-full object-cover"
                         />
-                      </div>
+                      </button>
                     )}
 
                     {/* Participant 1 */}
@@ -153,6 +159,14 @@ const BracketView = ({ matches, participants, isAdmin, onSelectMatch }: BracketV
         );
       })}
     </div>
+
+    {/* Image lightbox */}
+    <Dialog open={!!lightboxUrl} onOpenChange={() => setLightboxUrl(null)}>
+      <DialogContent className="max-w-3xl p-2 print:hidden">
+        <img src={lightboxUrl ?? ""} alt="Match result" className="w-full h-auto rounded" />
+      </DialogContent>
+    </Dialog>
+    </>
   );
 };
 
