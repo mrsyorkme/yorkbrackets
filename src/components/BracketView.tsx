@@ -158,6 +158,14 @@ const BracketView = ({ matches, participants, isAdmin, onSelectMatch }: BracketV
         );
       })}
     </div>
+
+    {/* Image lightbox */}
+    <Dialog open={!!lightboxUrl} onOpenChange={() => setLightboxUrl(null)}>
+      <DialogContent className="max-w-3xl p-2 print:hidden">
+        <img src={lightboxUrl ?? ""} alt="Match result" className="w-full h-auto rounded" />
+      </DialogContent>
+    </Dialog>
+    </>
   );
 };
 
